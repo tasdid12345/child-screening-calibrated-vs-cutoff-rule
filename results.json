@@ -1,0 +1,35 @@
+{
+  "question": "On a public child questionnaire screening dataset, can a calibrated, CV-tuned model that learns item weights beat the standard fixed score-cutoff rule at matching labelled screening outcomes?",
+  "method": "Stratified 70/30 split (seed 42) of UCI child ASD screening data (id 419). Baseline: item sum >= 6. Improved: class-balanced, CV-tuned, sigmoid-calibrated LR + LightGBM probability average with a threshold chosen on train out-of-fold predictions; 3 seeds. Test set used once.",
+  "dataset": {
+    "name": "UCI Autistic Spectrum Disorder Screening Data for Children",
+    "source_url": "https://archive.ics.uci.edu/dataset/419/autistic+spectrum+disorder+screening+data+for+children",
+    "n_rows": 292,
+    "n_train": 204,
+    "n_test": 88,
+    "same_as_paper": false,
+    "baseline_is_papers_method": false
+  },
+  "metric_name": "positive-class F1 (test set)",
+  "higher_is_better": true,
+  "baseline": "Standard screening rule: sum of the 10 yes/no items, flag if >= 6 (deterministic).",
+  "improved": "Learns item weights and uses background features via calibrated, CV-tuned, class-balanced LR + LightGBM average with a CV-chosen decision threshold.",
+  "metrics": {
+    "baseline_f1": 0.8842105263157894,
+    "improved_f1": 0.9843104291310247,
+    "improved_f1_std": 0.005351393402001536,
+    "baseline_sensitivity": 1.0,
+    "improved_sensitivity": 0.9920634920634921,
+    "improved_sensitivity_std": 0.011223917161691244,
+    "baseline_auc": 1.0,
+    "improved_auc": 0.9998274672187716,
+    "improved_auc_std": 0.00024399819916717932,
+    "baseline_score": 0.8842105263157894,
+    "improved_score": 0.9843104291310247,
+    "baseline_score_std": 0.0,
+    "improved_score_std": 0.005351393402001536,
+    "improvement": 0.10009990281523529,
+    "mean_chosen_threshold": 0.5083333333333333
+  },
+  "notes": "Small dataset, so the test set is small and differences are noisy; single split. Labels are ASD (not ADHD) and may be closely tied to the item score, so the cutoff rule can be hard to beat. The 'result' column (item sum) was excluded from model features. Baseline is deterministic (std 0); improved std is over seeds 42-44 on the same split. Hyper-parameters are tuned on train only, and the threshold is chosen from train out-of-fold predictions after tuning on the same train data (mild optimism confined to train)."
+}
